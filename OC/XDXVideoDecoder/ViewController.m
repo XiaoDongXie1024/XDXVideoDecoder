@@ -50,17 +50,17 @@ extern "C" {
 }
 
 - (IBAction)startParseDidClicked:(id)sender {
-    BOOL isUseFFmpeg = YES;
+    BOOL isUseFFmpeg = NO;
     if (isUseFFmpeg) {
-        [self startDecodeByFFmpeg];
+        [self startDecodeByFFmpegWithIsH265Data:YES];
     }else {
-        [self startDecodeByVTSession];
+        [self startDecodeByVTSessionWithIsH265Data:NO];
     }
     
 }
 
-- (void)startDecodeByVTSession {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"MOV"];
+- (void)startDecodeByVTSessionWithIsH265Data:(BOOL)isH265 {
+    NSString *path = [[NSBundle mainBundle] pathForResource:isH265 ? @"testh265" : @"testh264"  ofType:@"MOV"];
     XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];
     XDXVideoDecoder *decoder = [[XDXVideoDecoder alloc] init];
     decoder.delegate = self;
@@ -76,8 +76,8 @@ extern "C" {
     }];
 }
 
-- (void)startDecodeByFFmpeg {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"MOV"];
+- (void)startDecodeByFFmpegWithIsH265Data:(BOOL)isH265 {
+    NSString *path = [[NSBundle mainBundle] pathForResource:isH265 ? @"testh265" : @"testh264" ofType:@"MOV"];
     XDXAVParseHandler *parseHandler = [[XDXAVParseHandler alloc] initWithPath:path];
     XDXFFmpegVideoDecoder *decoder = [[XDXFFmpegVideoDecoder alloc] initWithFormatContext:[parseHandler getFormatContext] videoStreamIndex:[parseHandler getVideoStreamIndex]];
     decoder.delegate = self;
