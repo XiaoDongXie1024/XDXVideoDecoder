@@ -11,6 +11,7 @@
 #import "XDXPreviewView.h"
 #import "XDXVideoDecoder.h"
 #import "XDXFFmpegVideoDecoder.h"
+#import "XDXSortFrameHandler.h"
 
 // FFmpeg Header File
 #ifdef __cplusplus
@@ -28,12 +29,15 @@ extern "C" {
 };
 #endif
 
-@interface ViewController ()<XDXVideoDecoderDelegate,XDXFFmpegVideoDecoderDelegate>
+@interface ViewController ()<XDXVideoDecoderDelegate,XDXFFmpegVideoDecoderDelegate, XDXSortFrameHandlerDelegate>
 
-@property (strong, nonatomic) XDXPreviewView *previewView;
-@property (weak, nonatomic) IBOutlet UIButton *startBtn;
+@property (strong, nonatomic) XDXPreviewView    *previewView;
+@property (weak, nonatomic  ) IBOutlet UIButton *startBtn;
 
-@property (strong, nonatomic) XDXVideoDecoder *decoder;
+@property (nonatomic, assign) BOOL isH265File;
+
+@property (strong, nonatomic) XDXSortFrameHandler *sortHandler;
+
 @end
 
 @implementation ViewController
@@ -41,6 +45,11 @@ extern "C" {
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    
+    self.isH265File = YES;
+    
+    self.sortHandler = [[XDXSortFrameHandler alloc] init];
+    self.sortHandler.delegate = self;
 }
 
 - (void)setupUI {
@@ -52,9 +61,9 @@ extern "C" {
 - (IBAction)startParseDidClicked:(id)sender {
     BOOL isUseFFmpeg = NO;
     if (isUseFFmpeg) {
-        [self startDecodeByFFmpegWithIsH265Data:YES];
+        [self startDecodeByFFmpegWithIsH265Data:self.isH265File];
     }else {
-        [self startDecodeByVTSessionWithIsH265Data:NO];
+        [self startDecodeByVTSessionWithIsH265Data:self.isH265File];
     }
     
 }
@@ -94,13 +103,36 @@ extern "C" {
 }
 
 #pragma mark - Decode Callback
-- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer {
-    CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);
-    [self.previewView displayPixelBuffer:pix];
+- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer isFirstFrame:(BOOL)isFirstFrame {
+    if (self.isH265File) {
+        // Note : the first frame not need to sort.
+        if (isFirstFrame) {
+            CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);
+            [self.previewView displayPixelBuffer:pix];
+            return;
+        }
+        
+        [self.sortHandler addDataToLinkList:sampleBuffer];
+    }else {
+        CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);
+        [self.previewView displayPixelBuffer:pix];
+    }
 }
 
 -(void)getDecodeVideoDataByFFmpeg:(CMSampleBufferRef)sampleBuffer {
     CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);
     [self.previewView displayPixelBuffer:pix];
 }
+
+
+#pragma mark - Sort Callback
+- (void)getSortedVideoNode:(CMSampleBufferRef)sampleBuffer {
+    int64_t pts = (int64_t)(CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000);
+    static int64_t lastpts = 0;
+    NSLog(@"Test marigin - %lld",pts - lastpts);
+    lastpts = pts;
+    
+    [self.previewView displayPixelBuffer:CMSampleBufferGetImageBuffer(sampleBuffer)];
+}
+
 @end

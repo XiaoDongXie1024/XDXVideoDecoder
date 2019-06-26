@@ -48,6 +48,8 @@ typedef struct {
     
     uint8_t *_lastExtraData;
     int     _lastExtraDataSize;
+    
+    BOOL _isFirstFrame;
 }
 
 @end
@@ -78,8 +80,11 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
                                                                      timingInfo:sampleTime];
     
     if (samplebuffer) {
-        if ([decoder.delegate respondsToSelector:@selector(getVideoDecodeDataCallback:)]) {
-            [decoder.delegate getVideoDecodeDataCallback:samplebuffer];
+        if ([decoder.delegate respondsToSelector:@selector(getVideoDecodeDataCallback:isFirstFrame:)]) {
+            [decoder.delegate getVideoDecodeDataCallback:samplebuffer isFirstFrame:decoder->_isFirstFrame];
+            if (decoder->_isFirstFrame) {
+                decoder->_isFirstFrame = NO;
+            }
         }
         CFRelease(samplebuffer);
     }
@@ -96,6 +101,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
             .vps = NULL, .sps = NULL, .f_pps = NULL, .r_pps = NULL,
             .vps_size = 0, .sps_size = 0, .f_pps_size = 0, .r_pps_size = 0, .last_decode_pts = 0,
         };
+        _isFirstFrame = YES;
         pthread_mutex_init(&_decoder_lock, NULL);
     }
     return self;
@@ -143,11 +149,14 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
         return;
     }
     
+    /*  If open B frame, the code will not be used.
     if(_decoderInfo.last_decode_pts != 0 && videoInfo->pts <= _decoderInfo.last_decode_pts){
         log4cplus_error(kModuleName, "decode timestamp error ! current:%f, last:%f",videoInfo->pts, _decoderInfo.last_decode_pts);
         pthread_mutex_unlock(&_decoder_lock);
         return;
     }
+     */
+    
     _decoderInfo.last_decode_pts = videoInfo->pts;
     
     pthread_mutex_unlock(&_decoder_lock);

@@ -39,6 +39,7 @@
 		480B07C722A610BF00D86976 /* testh264.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 480B07C622A610BF00D86976 /* testh264.MOV */; };
 		480B07CB22A65B2600D86976 /* XDXVideoDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 480B07CA22A65B2600D86976 /* XDXVideoDecoder.mm */; };
 		480B07DC22A8E77900D86976 /* XDXFFmpegVideoDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 480B07DB22A8E77900D86976 /* XDXFFmpegVideoDecoder.mm */; };
+		48A5DA0722C08845008206A8 /* XDXSortFrameHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A5DA0622C08845008206A8 /* XDXSortFrameHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -198,6 +199,8 @@
 		480B07CA22A65B2600D86976 /* XDXVideoDecoder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = XDXVideoDecoder.mm; sourceTree = "<group>"; };
 		480B07DA22A8E77900D86976 /* XDXFFmpegVideoDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XDXFFmpegVideoDecoder.h; sourceTree = "<group>"; };
 		480B07DB22A8E77900D86976 /* XDXFFmpegVideoDecoder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = XDXFFmpegVideoDecoder.mm; sourceTree = "<group>"; };
+		48A5DA0522C08845008206A8 /* XDXSortFrameHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XDXSortFrameHandler.h; sourceTree = "<group>"; };
+		48A5DA0622C08845008206A8 /* XDXSortFrameHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XDXSortFrameHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -561,6 +564,8 @@
 				480B07CA22A65B2600D86976 /* XDXVideoDecoder.mm */,
 				480B07DA22A8E77900D86976 /* XDXFFmpegVideoDecoder.h */,
 				480B07DB22A8E77900D86976 /* XDXFFmpegVideoDecoder.mm */,
+				48A5DA0522C08845008206A8 /* XDXSortFrameHandler.h */,
+				48A5DA0622C08845008206A8 /* XDXSortFrameHandler.m */,
 			);
 			path = Decode;
 			sourceTree = "<group>";
@@ -646,6 +651,7 @@
 				23C8B3B922A355A600FE8A08 /* main.m in Sources */,
 				480B07CB22A65B2600D86976 /* XDXVideoDecoder.mm in Sources */,
 				23C8B45522A356F000FE8A08 /* XDXAVParseHandler.mm in Sources */,
+				48A5DA0722C08845008206A8 /* XDXSortFrameHandler.m in Sources */,
 				232AA49222A6C111001D6459 /* XDXPreviewView.mm in Sources */,
 				23C8B3AB22A355A500FE8A08 /* AppDelegate.m in Sources */,
 			);

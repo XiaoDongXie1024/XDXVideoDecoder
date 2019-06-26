@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol XDXVideoDecoderDelegate <NSObject>
 
 @optional
-- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer;
+- (void)getVideoDecodeDataCallback:(CMSampleBufferRef)sampleBuffer isFirstFrame:(BOOL)isFirstFrame;
 
 @end
 
