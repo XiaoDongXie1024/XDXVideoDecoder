@@ -107,6 +107,7 @@ extern "C" {
     if (self.isH265File) {
         // Note : the first frame not need to sort.
         if (isFirstFrame) {
+            [self.sortHandler cleanLinkList];
             CVPixelBufferRef pix = CMSampleBufferGetImageBuffer(sampleBuffer);
             [self.previewView displayPixelBuffer:pix];
             return;

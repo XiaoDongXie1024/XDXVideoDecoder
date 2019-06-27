@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak  , nonatomic) id<XDXSortFrameHandlerDelegate> delegate;
 
 - (void)addDataToLinkList:(CMSampleBufferRef)videoDataRef;
+- (void)cleanLinkList;
 
 @end
 

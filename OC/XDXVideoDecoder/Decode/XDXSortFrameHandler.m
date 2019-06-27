@@ -55,8 +55,19 @@ typedef struct XDXSortLinkList XDXSortLinkList;
             if ([self.delegate respondsToSelector:@selector(getSortedVideoNode:)]) {
                 [self.delegate getSortedVideoNode:_sortLinkList.dataArray[i]];
                 CFRelease(_sortLinkList.dataArray[i]);
+                _sortLinkList.dataArray[i] = NULL;
             }
         }
+    }
+}
+
+- (void)cleanLinkList {
+    _sortLinkList.index = 0;
+    for (int i = 0; i < g_maxSize; i++) {
+        if (CMSampleBufferIsValid(_sortLinkList.dataArray[i])) {
+            CFRelease(_sortLinkList.dataArray[i]);
+        }
+        _sortLinkList.dataArray[i] = NULL;
     }
 }
 
